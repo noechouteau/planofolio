@@ -1,12 +1,11 @@
-import { shaderMaterial,useGLTF, OrbitControls, useScroll, Scroll, Text, Float, Center, Text3D, useHelper, Trail, useCursor } from '@react-three/drei'
+import { shaderMaterial,useGLTF, OrbitControls, useScroll, Scroll, Text, Float, Center, Text3D, useHelper, Html, useCursor, Image } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { InstancedRigidBodies, CylinderCollider, BallCollider, CuboidCollider, RigidBody, Physics } from '@react-three/rapier'
 import { useMemo, useEffect, useState, useRef } from 'react'
 import { useFrame, extend, useThree } from '@react-three/fiber'
 import { Outline, EffectComposer} from '@react-three/postprocessing'
 import * as THREE from 'three'
-import homeTextVertexShader from './shaders/hometext/vertex.glsl'
-import homeTextFragmentShader from './shaders/hometext/fragment.glsl'
+
 
 import portalVertexShader from './shaders/portal/vertex.glsl'
 import portalFragmentShader from './shaders/portal/fragment.glsl'
@@ -14,25 +13,26 @@ import portalFragmentShader from './shaders/portal/fragment.glsl'
 import { BlendFunction } from 'postprocessing'
 import { gsap } from "gsap";
 
-
-const TextMaterial = shaderMaterial(
-    {
-        uTime : 0,
-        uColorStart : new THREE.Color('#ffcc00'),
-        uColorEnd : new THREE.Color('#ff0055')
-    },
-    homeTextVertexShader,
-    homeTextFragmentShader
-)
-
-extend({TextMaterial})
+import Island from './Island'
+import TBowling from './TBowling'
+import Cloud from './Cloud'
+import Portal from './Portal'
+import Blob from './Blob'
+import Train from './Train'
 
 export default function Experience()
 {
-    const scroll = useScroll()
+    const globalwidth  = useThree((state) => state.viewport.width)
+    const globalheight = useThree((state) => state.viewport.height)
+    const camera = useThree((state) => state.camera)
+
+    camera.position.set(0,0,7)
+    let scroll = useScroll()
     const textRef1 = useRef()
     const textRef2 = useRef()
 
+    const txtNoe = useGLTF('models/txtNoe.glb')
+    const txtPorto = useGLTF('models/txtPorto.glb')
     const cloudModel = useGLTF('models/cloud.glb')
     const cloudModel2 = useGLTF('models/cloud2.glb')
     const cloudModel3 = useGLTF('models/cloud3.glb')
@@ -68,14 +68,14 @@ export default function Experience()
     const cloud4ref = useRef()
     const cloud5ref = useRef()
     const cloud6ref = useRef()
+    
     const baliseRef = useRef()
     const cloudBowlref = useRef()
     const cloudPortalref = useRef()
     const cloudBlobref = useRef()
     const cloudTrainref = useRef()
     let [startAnimFinished, setStartAnimFinished] = useState(false)
-    let [lastOffset, setLastOffset] = useState(0)
-    let [currentRotation, setCurrentRotation] = useState(0)
+
 
     useEffect(() => {
         console.log("satrt")
@@ -85,8 +85,7 @@ export default function Experience()
             ease: 'ease.out'
         }
         ).then(()=>{
-            let div= document.querySelector("#root").children[0].children[0].children[2]
-            console.log(div.style)
+            let div= document.querySelector("#root").children[0].children[0].children[1]
             div.style.pointerEvents = 'all'
             setStartAnimFinished(true)
         })
@@ -99,72 +98,87 @@ export default function Experience()
     },[])
 
     const viewport = useThree((state) => state.viewport)
-    
+    let [offsetState, setOffsetState] = useState(0)
+    let [currentRef, setCurrentRef] = useState(null)
+    let [backFromArrow, setBackFromArrow] = useState(false)
+    let [oldPosition, setOldPosition] = useState(0)
+    let [topPosition, setTopPosition] = useState(0)
+    let [topScale, setTopScale] = useState(0)
+    let [oldScale, setOldScale] = useState(0)
+    let [backPosition, setBackPosition] = useState(0)
 
-    const cloudClick = (cloud) => {
-        console.log(cloud.current.position)
-        gsap.to(cloud.current.scale,{
-            x: 0.1,
-            y: 0.1,
-            z: 0.1,
-            duration: 0.7,
-            ease: 'elastic.out'
-        })
-        gsap.to(cloud.current.scale,{
-            x: 0.15,
-            y: 0.15,
-            z: 0.15,
-            duration: 0.7,
-            ease: 'elastic.in'
-        }).delay(1.5)
+    const handleInfoClicked = (offset, ref, topPos, topScale) => {
+        setOffsetState(offset)
+        setCurrentRef(ref.current)
+        setTopPosition(topPos)
+        setTopScale(topScale)
     }
 
-    // const planeClick = () => {
-    //     if(scroll.delta != 0) return
-    //     gsap.to(planeRef.current.rotation,{
-    //         x: currentRotation + Math.PI*2,
-    //         duration: 2.,
-    //         ease: 'power3.out'
-    //     }
-    //     ).then(()=>{planeRef.current.rotation.x = currentRotation})
-    // }
+    const handleArrowClicked = (oldPosition, oldScale, backPosition) => {
+        setBackFromArrow(true)
+        setOldPosition(oldPosition)
+        setOldScale(oldScale)
+        setBackPosition(backPosition)
+    }
 
 
     // useHelper(light1, THREE.DirectionalLightHelper,1, 'white')
     // useHelper(light2, THREE.DirectionalLightHelper,1, 'black')
 
-    const c1 = scroll.curve(0, 1.1/10)
-    const c2 = scroll.curve(1.1/10, 1.2/10)
-    const r1 = scroll.range(1.1/10, 1.2/10)
-    const r2 = scroll.range(1.2/10, 4/10)
-
     useFrame((state, delta) =>
     {
-        const time = state.clock.getElapsedTime()
+        console.log(topPosition)
+        if (backFromArrow){
+            gsap.to(currentRef.position, {duration: 2,x:globalwidth*oldPosition, y: -0.3, ease: 'expo.out'})
+            gsap.to(currentRef.rotation, {duration: 2,x:0, y: 0, ease: 'expo.out'})
+            gsap.to(scroll, {offset: offsetState, duration: 2, ease: 'power3.out'}).then(()=> scroll.el.scrollLeft = globalwidth*1.33*backPosition)
+            gsap.to(currentRef.scale, {duration: 2,x:oldScale, y: oldScale,z:oldScale, ease: 'expo.out'})
+            gsap.to(camera.position, {y:0, duration: 2, ease: 'power3.out'})
+            setBackFromArrow(false)
+            setOffsetState(0)
+            setCurrentRef(null)
+            setOldPosition(0)
+        } 
+        else if(offsetState > 0){
+            scroll.offset = offsetState
+            gsap.to(currentRef.position, {duration: 2,x:globalwidth*topPosition, y: 9, ease: 'expo.out'})
+            gsap.to(currentRef.rotation, {duration: 2,x:0, y: 0.7, ease: 'expo.out'})
+            gsap.to(currentRef.scale, {duration: 2,x:topScale, y: topScale,z:topScale, ease: 'expo.out'})
+            gsap.to(scroll, {offset: offsetState, duration: 2, ease: 'power3.out'})
+            gsap.to(camera.position, {y:10, duration: 2, ease: 'power3.out'})
+        } 
+        else {
+            const c1 = scroll.curve(0, 1.1/10)
+            const c2 = scroll.curve(1.1/10, 1.2/10)
+            const c3 = scroll.curve(3.9/10, 7.6/40)
+            const c4 = scroll.curve(5./10, 4/40)
+            const c5 = scroll.curve(3.9/10, 1.5/40)
+            
+            const r1 = scroll.range(1.1/10, 1.2/10)
+            const r2 = scroll.range(1.2/10, 6/10)
+            const r3 = scroll.range(6/10, 7/10)
+            const time = state.clock.getElapsedTime()
 
-    
+            if(!startAnimFinished) return
+            planeRef.current.position.x = scroll.offset  * globalwidth *4
+            planeRef.current.position.z = -c1 -c3*10
+            planeRef.current.rotation.z = c2/2 + c4*0.9 -c5*0.5
+            planeRef.current.position.y = r1*2-1
 
-        setLastOffset(scroll.offset)
-        if(!startAnimFinished) return
-        planeRef.current.position.x = scroll.offset  * viewport.width *3
-        planeRef.current.position.z = -c1
-        planeRef.current.rotation.z = c2/2
-        planeRef.current.position.y = r1*2-1
+            planeRef.current.rotation.x = c1 -c2/2 + r2*1.3 - r3
 
-        planeRef.current.rotation.x = c1 -c2/2 + r2
-        setCurrentRotation(planeRef.current.rotation.x)
-
-
-        // console.log(lastOffset)
-        // planeRef.current.position.x += 0.02
-        // planeRef.current.rotation.x += 0.002
-
+            if(scroll.delta > 0.01){
+                document.body.style.cursor = 'auto'
+            }
+            // planeRef.current.position.x += 0.02
+            // planeRef.current.rotation.x += 0.002
+        }
     })
 
 
     return <>
 
-        <Perf position="top-left" />
+        {/* <Perf position="top-left" /> */}
 
         {/* <OrbitControls></OrbitControls> */}
         <directionalLight position={[ 5, 4.5, -2]} intensity={ 5. } ref={light1} color="rgb(155,155,155)" />
@@ -174,121 +188,75 @@ export default function Experience()
         <EffectComposer autoClear={false}>
         </EffectComposer>
 
-
             <Physics debug={ false } gravity={ [ 0, - 9.08, 0 ] }>
 
-                <Scroll>
+                <Scroll width={"100vw"}>
 
-                <Center position={[viewport.width/-4.15,2,0]} >
-                    <Text3D ref={textRef1} font='fonts/Rounded.json' bevelEnabled letterSpacing={-0.07} size={0.6}> 
-                        Noé Chouteau
-                        <textMaterial></textMaterial>
-                    </Text3D>
+                {topPosition < 1 ?
+                <TBowling onArrowClicked={handleArrowClicked} oldScale={globalwidth*0.02} backPosition={117.692}></TBowling>
+                : null}
+
+                {topPosition > 1 && topPosition < 2?
+                <Portal onArrowClicked={handleArrowClicked} oldScale={globalwidth/65} backPosition={175.692}></Portal>
+                : null}
+
+                {topPosition > 2.04 && topPosition < 2.5?
+                <Blob onArrowClicked={handleArrowClicked} oldScale={globalwidth/65} backPosition={233.692}></Blob>
+                : null}
+
+                {topPosition > 2.5?
+                <Train onArrowClicked={handleArrowClicked} oldScale={globalwidth/65} backPosition={291.692}></Train>
+                : null}
+
+                <Center position={[globalwidth/-4.2,2,0]} scale={globalwidth/22}>
+                    <primitive ref={textRef1} object={txtNoe.scene}></primitive>
                 </Center>
 
 
-                <Center position={[viewport.width/-3.25,0.8,0]} >
-                    <Text3D ref={textRef2} font='fonts/Rounded.json' bevelEnabled letterSpacing={-0.07} size={0.6}>
-                        Portfolio
-                        <textMaterial></textMaterial>
-                    </Text3D>
+                <Center position={[globalwidth/-3.36,0.8,0]} scale={globalwidth/22}>
+                    <primitive ref={textRef2} object={txtPorto.scene}></primitive>
                 </Center>
 
                 
 
-                <Float speed={5} rotationIntensity={0}>
-                    <primitive ref={cloud1ref} object={cloudModel.scene} scale={0.15} position={[1,-2,1]} onClick={() => cloudClick(cloud1ref)}
-                        onPointerOver={() => document.body.style.cursor = 'pointer'}
-                        onPointerOut={() => document.body.style.cursor = 'auto'}
-                    >
-                    </primitive>
-                </Float>
+                <Cloud cloudRef={cloud1ref} position={[1,-2,1]} tdmodel={cloudModel} />
 
-                <Float speed={5} rotationIntensity={0}>
-                    <primitive ref={cloud2ref} object={cloudModel2.scene.clone()} scale={0.15} position={[3,-0.5,2]} onClick={() => cloudClick(cloud2ref)}
-                        onPointerOver={() => document.body.style.cursor = 'pointer'}
-                        onPointerOut={() => document.body.style.cursor = 'auto'}
-                    >
-                    </primitive>
-                </Float>
+                <Cloud cloudRef={cloud2ref} position={[globalwidth*0.23,-0.5,2]} tdmodel={cloudModel2} />
 
-                <Float speed={5} rotationIntensity={0}>
-                    <primitive ref={cloud3ref} object={cloudModel.scene.clone()} scale={0.15} position={[2.6,2,-2]} onClick={() => cloudClick(cloud3ref)}
-                    onPointerOver={() => document.body.style.cursor = 'pointer'}
-                    onPointerOut={() => document.body.style.cursor = 'auto'}
-                    >
-                    </primitive>
-                </Float>
-                
-                <Float speed={5} rotationIntensity={0}>
-                    <primitive ref={cloud4ref} object={cloudModel.scene.clone()} scale={0.15} position={[7,1,-0.7]} onClick={() => cloudClick(cloud4ref)}
-                        onPointerOver={() => document.body.style.cursor = 'pointer'}
-                        onPointerOut={() => document.body.style.cursor = 'auto'}
-                    >
-                    </primitive>
-                </Float>
+                <Cloud cloudRef={cloud3ref} position={[globalwidth*0.2,2,-2]} tdmodel={cloudModel} />
 
-                <Float speed={5} rotationIntensity={0}>
-                    <primitive ref={cloud5ref} object={cloudModel2.scene.clone()} scale={0.15} position={[7,-1.2,0.3]} onClick={() => cloudClick(cloud5ref)}
-                        onPointerOver={() => document.body.style.cursor = 'pointer'}
-                        onPointerOut={() => document.body.style.cursor = 'auto'}
-                    >
-                    </primitive>
-                </Float>
+                <Cloud cloudRef={cloud4ref} position={[globalwidth*0.54,1,-0.7]} tdmodel={cloudModel} />
 
-                <Float speed={5} rotationIntensity={0}>
-                    <primitive ref={cloud6ref} object={cloudModel3.scene.clone()} scale={0.15} position={[5.3,0,-3]} onClick={() => cloudClick(cloud6ref)}
-                        onPointerOver={() => document.body.style.cursor = 'pointer'}
-                        onPointerOut={() => document.body.style.cursor = 'auto'}
-                    >
-                    </primitive>
-                </Float>
+                <Cloud cloudRef={cloud5ref} position={[globalwidth*0.54,-1.2,0.3]} tdmodel={cloudModel2} />
+
+                <Cloud cloudRef={cloud6ref} position={[globalwidth*0.41,0,-3]} tdmodel={cloudModel3} />
+
+                <Cloud cloudRef={baliseRef} position={[globalwidth*0.93,-2,-1]} tdmodel={baliseModel} />
 
 
+                <Island planeRef={planeRef} speed={4} imagePosition={[globalwidth*1.33,3,-4]} scaled={globalwidth*0.02} 
+                textPosition={[globalwidth*1.30,-2.5,-1.3]} onInfoClicked={handleInfoClicked} infoPos={0.96} infoScale={globalwidth*0.02}
+                text="tBowling" scene={cloudBowlModel.scene} position={[globalwidth*1.33,-0.3,-5]} 
+                link="https://tbowling.vercel.app" refer={cloudBowlref} infoOffset={0.32}/>
 
-                <Float speed={5} rotationIntensity={0}>
-                    <primitive ref={baliseRef} object={baliseModel.scene} scale={0.15} position={[12,-2,-1]} onClick={() => cloudClick(baliseRef)}
-                        onPointerOver={() => document.body.style.cursor = 'pointer'}
-                        onPointerOut={() => document.body.style.cursor = 'auto'}
-                    >
-                    </primitive>
-                </Float>
+                <Island planeRef={planeRef} speed={3} imagePosition={[globalwidth*1.96,3,-2]} scaled={globalwidth/65} 
+                textPosition={[globalwidth*1.95,-1.8,1.2]} onInfoClicked={handleInfoClicked} infoPos={1.75} infoScale={globalwidth/70}
+                text="Purtal" scene={cloudPortalModel.scene} position={[globalwidth*1.95,-0.6,-1.7]}
+                 link="https://purtal.vercel.app" refer={cloudPortalref} infoOffset={0.49}/>
 
-                <Float speed={4} rotationIntensity={0}>
-                    <primitive ref={cloudBowlref} object={cloudBowlModel.scene} scale={0.1} position={[15,-1.3,-1]} onClick={() => cloudClick(cloudBowlref)}
-                        onPointerOver={() => document.body.style.cursor = 'pointer'}
-                        onPointerOut={() => document.body.style.cursor = 'auto'}
-                    >
-                    </primitive>
-                </Float>
+                <Island planeRef={planeRef} speed={4.5} imagePosition={[globalwidth*2.59,3,-2]} scaled={globalwidth/65}
+                textPosition={[globalwidth*2.57,-1.8,1.2]} onInfoClicked={handleInfoClicked} infoPos={2.35} infoScale={globalwidth/70}
+                text="Blob" scene={cloudBlobModel.scene} position={[globalwidth*2.57,-0.5,-1.5]}
+                link="https://blob-iota-one.vercel.app" refer={cloudBlobref} infoOffset={0.64}/>
 
-                <Float speed={3} rotationIntensity={0}>
-                    <primitive ref={cloudPortalref} object={cloudPortalModel.scene} scale={0.1} position={[19,-1.3,-1]} onClick={() => cloudClick(cloudPortalref)}
-                        onPointerOver={() => document.body.style.cursor = 'pointer'}
-                        onPointerOut={() => document.body.style.cursor = 'auto'}
-                    >
-                    </primitive>
-                </Float>
-
-                <Float speed={4.5} rotationIntensity={0}>
-                    <primitive ref={cloudBlobref} object={cloudBlobModel.scene} scale={0.1} position={[23,-1.3,-1]} onClick={() => cloudClick(cloudBlobref)}
-                        onPointerOver={() => document.body.style.cursor = 'pointer'}
-                        onPointerOut={() => document.body.style.cursor = 'auto'}
-                    >
-                    </primitive>
-                </Float>
-
-                <Float speed={4.5} rotationIntensity={0}>
-                    <primitive ref={cloudTrainref} object={cloudTrainModel.scene} scale={0.1} position={[27,-1.3,-1]} onClick={() => cloudClick(cloudTrainref)}
-                        onPointerOver={() => document.body.style.cursor = 'pointer'}
-                        onPointerOut={() => document.body.style.cursor = 'auto'}
-                    >
-                    </primitive>
-                </Float>
+                <Island planeRef={planeRef} speed={4.5} imagePosition={[globalwidth*3.06,3,-2]} scaled={globalwidth*0.011}
+                textPosition={[globalwidth*3.04,-1.8,1.2]} onInfoClicked={handleInfoClicked} infoPos={2.84} infoScale={globalwidth*0.011}
+                text="Train Journey" scene={cloudTrainModel.scene} position={[globalwidth*3.04,-0.5,-1]}
+                link="https://train-journey.vercel.app" refer={cloudTrainref} infoOffset={0.76}/>
 
 
                 <Float speed={12} rotationIntensity={0} floatIntensity={0.1}>
-                    <primitive ref={planeRef} object={planeModel.scene} scale={0.2} position={[-9,-1,0]} rotation={[0,0,0]}
+                    <primitive ref={planeRef} object={planeModel.scene} scale={globalwidth/65} position={[-9,-1,0]} rotation={[0,0,0]}
                     ></primitive>
                 </Float>
 

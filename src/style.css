@@ -1,3 +1,9 @@
+@font-face {
+    font-family: 'Rounded';
+    src: url('MPLUSRounded1c-Black.ttf') format('truetype');
+    
+}
+
 html,
 body,
 #root
@@ -15,7 +21,7 @@ body,
 }
 
 body {
-    font-family: inter;
+    font-family: 'Rounded', sans-serif;
     color: black;
     background: #f0f0f0;
     overscroll-behavior: none;

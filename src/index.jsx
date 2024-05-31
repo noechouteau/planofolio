@@ -25,7 +25,7 @@ export default function App() {
                 position: [ 0,0,7 ],
             } }
         >
-            <ScrollControls horizontal damping={0.5} pages={4} distance={1}>
+            <ScrollControls horizontal damping={0.25} pages={5} distance={1}>
                 <Experience />
             </ScrollControls>
         </Canvas>
