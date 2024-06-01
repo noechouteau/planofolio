@@ -2,13 +2,27 @@ import React, { useRef } from 'react'
 import { Float } from '@react-three/drei'
 import { useThree } from '@react-three/fiber'
 import { gsap } from 'gsap'
+import * as THREE from 'three'
 
 export default function Cloud(props) {
 
     const globalwidth= useThree((state) => state.viewport.width)
+    const camera = useThree((state) => state.camera)
+
+    const audioLoader = new THREE.AudioLoader()
+    const listener = new THREE.AudioListener();
+    camera.add( listener );
     
     const cloudClick = (cloud) => {
         console.log(cloud.current.position)
+        audioLoader.load('sounds/cloudBop.mp3', function(buffer){
+            const sound = new THREE.PositionalAudio(listener)
+            sound.setBuffer(buffer)
+            sound.setRefDistance(1)
+            sound.setRolloffFactor(1)
+            cloud.current.add(sound)
+            sound.play()
+        })
         gsap.to(cloud.current.scale,{
             x: globalwidth*0.0078,
             y: globalwidth*0.0078,
@@ -22,7 +36,16 @@ export default function Cloud(props) {
             z: globalwidth/87,
             duration: 0.7,
             ease: 'elastic.in'
-        }).delay(1.5)
+        }).delay(1.5).then(() => {
+            audioLoader.load('sounds/cloudBopReverse.mp3', function(buffer){
+                const sound = new THREE.PositionalAudio(listener)
+                sound.setBuffer(buffer)
+                sound.setRefDistance(1)
+                sound.setRolloffFactor(1)
+                cloud.current.add(sound)
+                sound.play()
+            })
+        })
     }
 
     return (

@@ -26,6 +26,10 @@ export default function Experience()
     const globalheight = useThree((state) => state.viewport.height)
     const camera = useThree((state) => state.camera)
 
+    const listener = new THREE.AudioListener()
+    camera.add(listener)
+    const audioLoader = new THREE.AudioLoader()
+
     camera.position.set(0,0,7)
     let scroll = useScroll()
     const textRef1 = useRef()
@@ -44,6 +48,10 @@ export default function Experience()
     const cloudPortalModel = useGLTF('models/cloudPortal.glb')
     const cloudBlobModel = useGLTF('models/cloudBlob.glb')
     const cloudTrainModel = useGLTF('models/cloudTrain.glb')
+    const deuxunModel = useGLTF('models/2124.glb')
+    const deuxtroisModel = useGLTF('models/2324.glb')
+    const deuxcinqModel = useGLTF('models/2526.glb')
+
 
     const portalLightMaterial = new THREE.ShaderMaterial({ 
         uniforms : {
@@ -81,6 +89,9 @@ export default function Experience()
     const cloudPortalref = useRef()
     const cloudBlobref = useRef()
     const cloudTrainref = useRef()
+    const deuxunRef = useRef()
+    const deuxtroisRef = useRef()
+    const deuxcinqRef = useRef()
     let [startAnimFinished, setStartAnimFinished] = useState(false)
 
 
@@ -276,18 +287,48 @@ export default function Experience()
 
         <Image ref={mailRef} url="/mail.png" transparent opacity={0.5} scale={globalwidth*0.035} position={[globalwidth*-0.231, -1.3, 3]} onPointerOver={homeImageOver.bind(this, mailRef)} onPointerOut={homeImageOut.bind(this, mailRef)}
                 onClick={()=>{
+                    const nb = Math.floor(Math.random() * 4) + 1
+                    audioLoader.load('sounds/pop'+nb+".mp3", function(buffer){
+                        const sound = new THREE.PositionalAudio(listener)
+                        sound.setVolume(1.5)
+                        sound.setBuffer(buffer)
+                        sound.setRefDistance(1)
+                        sound.setRolloffFactor(1)
+                        mailRef.current.add(sound)
+                        sound.play()
+                    })
                     window.open('mailto:noe.chouteau@gmail.com')
                 }}
                 >
                 </Image>
                 <Image ref={linkedinRef} url="/linkedin.png" transparent opacity={0.5} scale={globalwidth*0.035} position={[globalwidth*-0.188, -1.3, 3]} onPointerOver={homeImageOver.bind(this, linkedinRef)} onPointerOut={homeImageOut.bind(this, linkedinRef)}
                 onClick={()=>{
+                    const nb = Math.floor(Math.random() * 4) + 1
+                    audioLoader.load('sounds/pop'+nb+".mp3", function(buffer){
+                        const sound = new THREE.PositionalAudio(listener)
+                        sound.setVolume(1.5)
+                        sound.setBuffer(buffer)
+                        sound.setRefDistance(1)
+                        sound.setRolloffFactor(1)
+                        linkedinRef.current.add(sound)
+                        sound.play()
+                    })
                     window.open('https://www.linkedin.com/in/no%C3%A9-chouteau-422b2b222/')
                 }}
                 ></Image>
                 
                 <Image ref={themeImRef} url={"/" + theme + ".png"} transparent opacity={0.5} scale={globalwidth*0.035} position={[globalwidth*-0.145, -1.3, 3]} onPointerOver={homeImageOver.bind(this, themeImRef)} onPointerOut={homeImageOut.bind(this, themeImRef)} 
                 onClick={()=>{
+                    const nb = Math.floor(Math.random() * 4) + 1
+                    audioLoader.load('sounds/pop'+nb+".mp3", function(buffer){
+                        const sound = new THREE.PositionalAudio(listener)
+                        sound.setVolume(1.5)
+                        sound.setBuffer(buffer)
+                        sound.setRefDistance(1)
+                        sound.setRolloffFactor(1)
+                        themeImRef.current.add(sound)
+                        sound.play()
+                    })
                     let root = document.querySelector("#root")
                     if(theme === 'matinée'){
                         root.classList.remove(root.classList[0])
@@ -382,6 +423,11 @@ export default function Experience()
                 link="https://train-journey.vercel.app" refer={cloudTrainref} infoOffset={0.76}/>
 
                 <Cloud cloudRef={balise2Ref} position={[globalwidth*3.43,-2,-1]} tdmodel={balise2Model} />
+
+                <Cloud cloudRef={deuxunRef} position={[globalwidth*3.73,0.5,3]} tdmodel={deuxunModel} />
+                <Cloud cloudRef={deuxtroisRef} position={[globalwidth*3.93,0.5,3]} tdmodel={deuxtroisModel} />
+                <Cloud cloudRef={deuxcinqRef} position={[globalwidth*4.13,0.5,3]} tdmodel={deuxcinqModel} />
+
 
 
 
