@@ -51,7 +51,7 @@ export default function Blob(props) {
     <Cloud cloudRef={glslCloudRefB} position={[globalwidth*2.53,8,0.1]} tdmodel={glslCloudB} rotation={[-0.5,-0.1,-0.01]}/>
     <Cloud cloudRef={threeCloudRefB} position={[globalwidth*2.2,9.5,0.6]} tdmodel={threeCloudB} rotation={[-0.2,0.8,0.01]} />
 
-    <mesh ref={cloudArrowRefB} geometry={nodes.arrow.geometry} material={materials['Material.001']} position={[globalwidth*2.115,7.4,0]} scale={0.1} rotation={[-0.1,0.6,0]} 
+    <mesh ref={cloudArrowRefB} geometry={nodes.arrow.geometry} material={materials['Material.001']} position={[globalwidth*2.242,8.4,2]} scale={0.13} rotation={[0.0,0.5,-0.9]}  
         onPointerOver={()=>{document.body.style.cursor = "pointer"}}
         onPointerOut={()=>{document.body.style.cursor = "auto"}}
         onClick={arrowClick}

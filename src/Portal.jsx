@@ -53,7 +53,7 @@ export default function Portal(props) {
     <Cloud cloudRef={threeCloudRefP} position={[globalwidth*1.6,9.5,0.6]} tdmodel={threeCloudP} rotation={[-0.2,0.8,0.01]} />
     <Cloud cloudRef={blenderCloudRefP} position={[globalwidth*1.74,8.,0.4]} tdmodel={blenderCloudP} rotation={[0.,0.3,0.1]} />
 
-    <mesh ref={cloudArrowRefP} geometry={nodes.arrow.geometry} material={materials['Material.001']} position={[globalwidth*1.515,7.4,0]} scale={0.1} rotation={[-0.1,0.6,0]} 
+    <mesh ref={cloudArrowRefP} geometry={nodes.arrow.geometry} material={materials['Material.001']} position={[globalwidth*1.642,8.4,2]} scale={0.13} rotation={[0.0,0.5,-0.9]}  
         onPointerOver={()=>{document.body.style.cursor = "pointer"}}
         onPointerOut={()=>{document.body.style.cursor = "auto"}}
         onClick={arrowClick}

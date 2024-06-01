@@ -12,7 +12,6 @@ export default function Island(props) {
     let desac = true
 
     const interHover = () => {
-        console.log(imageRef.current)
         gsap.to(imageRef.current.material, {duration: 0.5, opacity:1.0, ease: 'ease.out'})
         document.body.style.cursor = 'pointer'
     }

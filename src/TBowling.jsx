@@ -50,7 +50,7 @@ export default function TBowling(props) {
     <Cloud cloudRef={glslCloudRef} position={[globalwidth*1.20,7.5,-1]} tdmodel={glslCloud} rotation={[-0.5,-0.1,-0.01]}/>
     <Cloud cloudRef={threeCloudRef} position={[globalwidth*0.9,9,-0.3]} tdmodel={threeCloud} rotation={[-0.2,0.7,0.01]} />
 
-    <mesh ref={cloudArrowRef} geometry={nodes.arrow.geometry} material={materials['Material.001']} position={[globalwidth*0.775,7.,-1]} scale={0.1} rotation={[-0.1,0.5,0]} 
+    <mesh ref={cloudArrowRef} geometry={nodes.arrow.geometry} material={materials['Material.001']} position={[globalwidth*0.96,8.4,2]} scale={0.13} rotation={[0.0,0.5,-0.9]} 
         onPointerOver={()=>{document.body.style.cursor = "pointer"}}
         onPointerOut={()=>{document.body.style.cursor = "auto"}}
         onClick={arrowClick}

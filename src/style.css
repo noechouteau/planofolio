@@ -13,11 +13,45 @@ body,
     left: 0;
     width: 100%;
     height: 100%;
+}
+
+.aurore {
+    background-image: radial-gradient(farthest-corner at 2000px -40px,
+    #ffe0cf 10%,
+    #ffb9dd, 60%,
+    #88c0e2 100%)
+}
+
+.matinée {
+    background-image: radial-gradient(farthest-corner at 2000px -40px,
+    #ffe0cf 10%,
+    #f5c8df, 60%,
+    #88c0e2 100%)
+}
+
+.aprem {
     background-image: radial-gradient(
       farthest-corner at 2000px -40px,
       #ffffff 0%,
       #88c0e2 100%
     );
+}
+
+.crépuscule {
+    background-image: radial-gradient(
+        farthest-corner at 2000px -40px,
+        #FF5F25 0%,
+        #ffa47a, 50%,
+        #787aad, 100%,
+        rgb(33,37,104)100%)
+}
+
+.nuit {
+    background-image: radial-gradient(
+        farthest-corner at 2000px -40px,
+        #c3c3c3 0%,
+        #031622 50%
+      );
 }
 
 body {

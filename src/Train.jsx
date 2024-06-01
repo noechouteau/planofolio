@@ -54,7 +54,7 @@ export default function Train(props) {
     <Cloud cloudRef={threeCloudRefT} position={[globalwidth*2.6,9.5,-0.5]} tdmodel={threeCloudT} rotation={[-0.2,0.8,-0.05]} />
     <Cloud cloudRef={blenderCloudRefT} position={[globalwidth*2.8,8.1,0.7]} tdmodel={blenderCloudT} rotation={[-0.2,0.6,0.01]} />
 
-    <mesh ref={cloudArrowRefT} geometry={nodes.arrow.geometry} material={materials['Material.001']} position={[globalwidth*2.595,7.4,0]} scale={0.1} rotation={[-0.1,0.6,0]} 
+    <mesh ref={cloudArrowRefT} geometry={nodes.arrow.geometry} material={materials['Material.001']} position={[globalwidth*2.722,8.4,2]} scale={0.13} rotation={[0.0,0.5,-0.9]}   
         onPointerOver={()=>{document.body.style.cursor = "pointer"}}
         onPointerOut={()=>{document.body.style.cursor = "auto"}}
         onClick={arrowClick}
@@ -65,10 +65,16 @@ export default function Train(props) {
     <Text fontSize={globalwidth*0.08} maxWidth={globalwidth*0.47} opacity={1} position={[globalwidth*3.06, 12.6, -1]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"#3A9DFF"}>
         TRAIN
     </Text>
-    <mesh position={[globalwidth * 3.32, 11.2, -1]} rotation={[0, 0, 0]} >
+
+    <RoundedBox position={[globalwidth * 3.32, 11.2, -1]} radius={0.1} args={[globalwidth*0.49, 1.4,0.1]} bevelSegments={0} >
+        <meshBasicMaterial color={"#3A9DFF"} />
+    </RoundedBox>
+
+    {/* <mesh position={[globalwidth * 3.32, 11.2, -1]} rotation={[0, 0, 0]} >
         <planeGeometry args={[globalwidth*0.49, 1.4]} />
         <meshBasicMaterial color={"#3A9DFF"} />
-    </mesh>
+    </mesh> */}
+
     <Text textAlign={"justify"} fontSize={globalwidth*0.012} maxWidth={globalwidth*0.47} opacity={1} position={[globalwidth * 3.32, 11.2, -1]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"white"}>
     Le projet "Train Journey" représente mon premier vrai travail autonome. Mon objectif principal était d'améliorer mes compétences en modélisation 3D et surtout en programmation de shaders. L'idée était de créer une expérience où l'utilisateur pourrait voyager à travers différents paysages abstraits, tout en conservant un élément constant pour maintenir une certaine cohérence. C'est ainsi que l'idée d'une locomotive miniature est née.     </Text>
 

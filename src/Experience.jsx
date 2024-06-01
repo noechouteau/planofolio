@@ -1,4 +1,4 @@
-import { shaderMaterial,useGLTF, OrbitControls, useScroll, Scroll, Text, Float, Center, Text3D, useHelper, Html, useCursor, Image } from '@react-three/drei'
+import { Stars,useGLTF, OrbitControls, useScroll, Scroll, Text, Float, Center, Text3D, useHelper, Html, useCursor, Image } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { InstancedRigidBodies, CylinderCollider, BallCollider, CuboidCollider, RigidBody, Physics } from '@react-three/rapier'
 import { useMemo, useEffect, useState, useRef } from 'react'
@@ -30,6 +30,7 @@ export default function Experience()
     let scroll = useScroll()
     const textRef1 = useRef()
     const textRef2 = useRef()
+    let [theme, setTheme] = useState('matinée')
 
     const txtNoe = useGLTF('models/txtNoe.glb')
     const txtPorto = useGLTF('models/txtPorto.glb')
@@ -39,6 +40,7 @@ export default function Experience()
     const planeModel = useGLTF('models/plane.glb')
     const cloudBowlModel = useGLTF('models/cloudBowl.glb')
     const baliseModel = useGLTF('models/balise.glb')
+    const balise2Model = useGLTF('models/balise2.glb')
     const cloudPortalModel = useGLTF('models/cloudPortal.glb')
     const cloudBlobModel = useGLTF('models/cloudBlob.glb')
     const cloudTrainModel = useGLTF('models/cloudTrain.glb')
@@ -59,6 +61,10 @@ export default function Experience()
     const portalLightMesh = cloudPortalModel.scene.children.find((child) => child.name === 'portalLight')
     portalLightMesh.material = portalLightMaterial
 
+    const mailRef = useRef()
+    const linkedinRef = useRef()
+    const themeImRef = useRef()
+
     const planeRef = useRef()
     const light1 = useRef()
     const light2 = useRef()
@@ -70,6 +76,7 @@ export default function Experience()
     const cloud6ref = useRef()
     
     const baliseRef = useRef()
+    const balise2Ref = useRef()
     const cloudBowlref = useRef()
     const cloudPortalref = useRef()
     const cloudBlobref = useRef()
@@ -78,14 +85,42 @@ export default function Experience()
 
 
     useEffect(() => {
-        console.log("satrt")
+        let root = document.querySelector("#root")
+        const actualTime = new Date()
+
+        if(actualTime.getHours() >= 8 && actualTime.getHours() < 12){
+            setTheme('matinée')
+            root.classList.remove(root.classList[0])
+            root.classList.add('matinée')
+        }
+        else if(actualTime.getHours() >= 12 && actualTime.getHours() < 19){
+            setTheme('aprem')
+            root.classList.remove(root.classList[0])
+            root.classList.add('aprem')
+        }
+        else if(actualTime.getHours() >= 19 && actualTime.getHours() < 20){
+            setTheme('crépuscule')
+            root.classList.remove(root.classList[0])
+            root.classList.add('crépuscule')
+            
+        }
+        else if(actualTime.getHours() >= 4 && actualTime.getHours() < 8){
+            setTheme('aurore')
+            root.classList.remove(root.classList[0])
+            root.classList.add('aurore')
+        }
+        else {
+            setTheme('nuit')
+        }
+        
+
         gsap.to(planeRef.current.position,{
             x: 0,
             duration: 2.5,
             ease: 'ease.out'
         }
         ).then(()=>{
-            let div= document.querySelector("#root").children[0].children[0].children[1]
+            let div= root.children[0].children[0].children[1]
             div.style.pointerEvents = 'all'
             setStartAnimFinished(true)
         })
@@ -119,6 +154,16 @@ export default function Experience()
         setOldPosition(oldPosition)
         setOldScale(oldScale)
         setBackPosition(backPosition)
+    }
+
+    const homeImageOver = (passedImageRef) => {
+        gsap.to(passedImageRef.current.material, {duration: 0.5, opacity:1.0, ease: 'ease.out'})
+        document.body.style.cursor = 'pointer'
+    }
+
+    const homeImageOut = (passedImageRef) => {
+        gsap.to(passedImageRef.current.material, {duration: 0.5, opacity:0.5, ease: 'ease.out'})
+        document.body.style.cursor = 'auto'
     }
 
 
@@ -181,12 +226,94 @@ export default function Experience()
         {/* <Perf position="top-left" /> */}
 
         {/* <OrbitControls></OrbitControls> */}
-        <directionalLight position={[ 5, 4.5, -2]} intensity={ 5. } ref={light1} color="rgb(155,155,155)" />
-        <directionalLight position={[ 0, 0, 5 ]} intensity={ 8. } ref={light2} color="rgb(84,106,255)" />
-        <ambientLight intensity={ 1.5 } />
+
+        {theme === 'aprem' ?
+        <>
+            <directionalLight position={[ 5, 4.5, -2]} intensity={ 5. } ref={light1} color="rgb(155,155,155)" />
+            <directionalLight position={[ 0, 0, 5 ]} intensity={ 8. } ref={light2} color="rgb(84,106,255)" /> 
+            <ambientLight intensity={ 1.5 }/>
+        </>
+        :null}
+
+        {theme === 'matinée' ?
+        <>
+        <directionalLight position={[ 5, 4.5, 1]} intensity={ 8. } ref={light1} color="#E77E1D" />
+        <directionalLight position={[ 0, 0, 5 ]} intensity={ 3. } ref={light2} color="rgb(53,34,122)" />
+        <ambientLight intensity={ 8.5 } color="rgb(33,37,104)"/>
+        <ambientLight intensity={ 1.5 }/>
+        </>
+        :null}
+
+        {theme === 'aurore' ?
+        <>
+        <directionalLight position={[ 5, 4.5, 1]} intensity={ 8. } ref={light1} color="#E77E1D" />
+        <directionalLight position={[ 0, 0, 5 ]} intensity={ 3. } ref={light2} color="rgb(53,34,122)" />
+        <ambientLight intensity={ 8.5 } color="rgb(33,37,104)"/>
+        <ambientLight intensity={ 0.5 }/>
+        </>
+        :null}
+
+        {theme === 'crépuscule' ?
+        <>
+        <directionalLight position={[ 5, 4.5, 3]} intensity={ 6. } ref={light1} color="#FF5F25" />
+        <directionalLight position={[ -3, -2, 2 ]} intensity={ 6. } ref={light2} color="rgb(33,37,104)" />
+        <ambientLight intensity={ 0.5 }/>
+        </>
+        :null}
+
+        {theme === 'nuit' ?
+                <>
+                <Stars radius={90} depth={1} count={5000} factor={4} saturation={0} fade speed={1} />
+                <directionalLight position={[ 5, 4.5, -2]} intensity={ 5. } ref={light1} color="rgb(155,155,155)" />
+                <directionalLight position={[ 0, 0, 5 ]} intensity={ 8. } ref={light2} color="rgb(84,106,255)" /> 
+                </>
+                
+        :null}
+
 
         <EffectComposer autoClear={false}>
         </EffectComposer>
+
+        <Image ref={mailRef} url="/mail.png" transparent opacity={0.5} scale={globalwidth*0.035} position={[globalwidth*-0.231, -1.3, 3]} onPointerOver={homeImageOver.bind(this, mailRef)} onPointerOut={homeImageOut.bind(this, mailRef)}
+                onClick={()=>{
+                    window.open('mailto:noe.chouteau@gmail.com')
+                }}
+                >
+                </Image>
+                <Image ref={linkedinRef} url="/linkedin.png" transparent opacity={0.5} scale={globalwidth*0.035} position={[globalwidth*-0.188, -1.3, 3]} onPointerOver={homeImageOver.bind(this, linkedinRef)} onPointerOut={homeImageOut.bind(this, linkedinRef)}
+                onClick={()=>{
+                    window.open('https://www.linkedin.com/in/no%C3%A9-chouteau-422b2b222/')
+                }}
+                ></Image>
+                
+                <Image ref={themeImRef} url={"/" + theme + ".png"} transparent opacity={0.5} scale={globalwidth*0.035} position={[globalwidth*-0.145, -1.3, 3]} onPointerOver={homeImageOver.bind(this, themeImRef)} onPointerOut={homeImageOut.bind(this, themeImRef)} 
+                onClick={()=>{
+                    let root = document.querySelector("#root")
+                    if(theme === 'matinée'){
+                        root.classList.remove(root.classList[0])
+                        root.classList.add('aprem')
+                        setTheme('aprem')
+                    }
+                    else if(theme === 'aprem'){
+                        root.classList.remove(root.classList[0])
+                        root.classList.add('crépuscule')
+                        setTheme('crépuscule')
+                    }
+                    else if(theme === 'crépuscule'){
+                        root.classList.remove(root.classList[0])
+                        root.classList.add('nuit')
+                        setTheme('nuit')
+                    }
+                    else if(theme === 'nuit'){
+                        root.classList.remove(root.classList[0])
+                        root.classList.add('aurore')
+                        setTheme('aurore')
+                    } else {
+                        root.classList.remove(root.classList[0])
+                        root.classList.add('matinée')
+                        setTheme('matinée')
+                    }
+                }}></Image>
 
             <Physics debug={ false } gravity={ [ 0, - 9.08, 0 ] }>
 
@@ -205,7 +332,7 @@ export default function Experience()
                 : null}
 
                 {topPosition > 2.5?
-                <Train onArrowClicked={handleArrowClicked} oldScale={globalwidth/65} backPosition={291.692}></Train>
+                <Train onArrowClicked={handleArrowClicked} oldScale={globalwidth*0.011} backPosition={291.692}></Train>
                 : null}
 
                 <Center position={[globalwidth/-4.2,2,0]} scale={globalwidth/22}>
@@ -253,6 +380,9 @@ export default function Experience()
                 textPosition={[globalwidth*3.04,-1.8,1.2]} onInfoClicked={handleInfoClicked} infoPos={2.84} infoScale={globalwidth*0.011}
                 text="Train Journey" scene={cloudTrainModel.scene} position={[globalwidth*3.04,-0.5,-1]}
                 link="https://train-journey.vercel.app" refer={cloudTrainref} infoOffset={0.76}/>
+
+                <Cloud cloudRef={balise2Ref} position={[globalwidth*3.43,-2,-1]} tdmodel={balise2Model} />
+
 
 
                 <Float speed={12} rotationIntensity={0} floatIntensity={0.1}>
