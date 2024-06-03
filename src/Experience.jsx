@@ -20,7 +20,7 @@ import Portal from './Portal'
 import Blob from './Blob'
 import Train from './Train'
 
-export default function Experience()
+export default function Experience(started)
 {
     const globalwidth  = useThree((state) => state.viewport.width)
     const globalheight = useThree((state) => state.viewport.height)
@@ -29,8 +29,6 @@ export default function Experience()
     const listener = new THREE.AudioListener()
     camera.add(listener)
     const audioLoader = new THREE.AudioLoader()
-
-    camera.position.set(0,0,7)
     let scroll = useScroll()
     const textRef1 = useRef()
     const textRef2 = useRef()
@@ -85,6 +83,21 @@ export default function Experience()
     const cloud4ref = useRef()
     const cloud5ref = useRef()
     const cloud6ref = useRef()
+
+    const cloud7ref = useRef()
+    const cloud8ref = useRef()
+    const cloud9ref = useRef()
+    const cloud10ref = useRef()
+    const cloud11ref = useRef()
+    const cloud12ref = useRef()
+    const cloud13ref = useRef()
+    const cloud14ref = useRef()
+    const cloud15ref = useRef()
+    const cloud16ref = useRef()
+    const cloud17ref = useRef()
+
+
+
     
     const baliseRef = useRef()
     const balise2Ref = useRef()
@@ -96,12 +109,25 @@ export default function Experience()
     const deuxtroisRef = useRef()
     const deuxcinqRef = useRef()
     let [startAnimFinished, setStartAnimFinished] = useState(false)
+    const [firstEffect, setFirstEffect] = useState(false)
+    const [enterAnimFinished, setEnterAnimFinished] = useState(true)
+    if(!enterAnimFinished){
+        camera.position.set(0,0,110)
+    }
 
 
     useEffect(() => {
+        if(!started) return
+        if(!firstEffect){
+            setFirstEffect(true)
+            setEnterAnimFinished(false)
+            return
+        }
+
         let root = document.querySelector("#root")
         const actualTime = new Date()
 
+        setTimeout(() => {
         audioLoader.load('sounds/wind.mp3', function(buffer){
             const sound = new THREE.PositionalAudio(listener)
             sound.setVolume(1.5)
@@ -111,7 +137,7 @@ export default function Experience()
             planeRef.current.add(sound)
             sound.play()
             sound.setLoop(true)
-        })
+        })}, 500)
 
         if(actualTime.getHours() >= 8 && actualTime.getHours() < 12){
             setTheme('matinée')
@@ -142,15 +168,62 @@ export default function Experience()
         
         document.body.style.cursor = 'auto'
 
+
+        if(!enterAnimFinished){
+            gsap.to(planeRef.current.position,{
+                x: 0,
+                z:6.5,
+                duration: 5.5,
+                ease: 'ease.in'
+            }).delay(0.7)
+
+            gsap.to(planeRef.current.rotation,{
+                x:0,
+                z: Math.PI/2,
+                y: Math.PI/2,
+                duration: 1.5,
+                ease: 'ease.out'
+            }).delay(5.3)
+
+            gsap.to(planeRef.current.position,{
+                y:1,
+                duration: 2.5,
+                ease: 'ease.out'
+            }).delay(6.3).then(()=>{
+                planeComeBack()
+            })
+
+            setTimeout(() => {
+                setEnterAnimFinished(true)
+            }, 7100)
+
+
+            gsap.to(camera.position,{
+                z:7,
+                duration: 5.5,
+                ease: 'ease.in'
+            }).delay(0.7)
+
+            return
+        }
+    },[started])
+
+    const planeComeBack = () => {
+        camera.position.set(0,0,7)
+        planeRef.current.rotation.set(0,0,0)
         gsap.to(planeRef.current.position,{
             x: 0,
+            z:0,
+            y:-1,
             duration: 2.5,
             ease: 'ease.out'
         }
         
         ).then(()=>{
+            
             let div= root.children[0].children[0].children[1]
             div.style.pointerEvents = 'all'
+            
             gsap.to(welcomeTextRef.current,{
                 fillOpacity: 1,
                 duration: 1,
@@ -162,14 +235,15 @@ export default function Experience()
                 ease: "ease.out"
             })
             setStartAnimFinished(true)
+            setComeBack(true)
         })
         gsap.to(planeRef.current.rotation,{
             x: -Math.PI*2,
-            duration: 1.5,
+            duration: 2.5,
             ease: 'ease.out'
         }
         )
-    },[])
+    }
 
     const viewport = useThree((state) => state.viewport)
     let [offsetState, setOffsetState] = useState(0)
@@ -208,10 +282,11 @@ export default function Experience()
 
     // useHelper(light1, THREE.DirectionalLightHelper,1, 'white')
     // useHelper(light2, THREE.DirectionalLightHelper,1, 'black')
-
+    
     useFrame((state, delta) =>
     {
-        console.log(theme)
+        console.log(enterAnimFinished)
+        if(!enterAnimFinished) return
         if (backFromArrow){
             gsap.to(currentRef.position, {duration: 2,x:globalwidth*oldPosition, y: -0.3, ease: 'expo.out'})
             gsap.to(currentRef.rotation, {duration: 2,x:0, y: 0, ease: 'expo.out'})
@@ -313,6 +388,8 @@ export default function Experience()
         <EffectComposer autoClear={false}>
         </EffectComposer>
 
+        {enterAnimFinished ?
+        <>
         <Image ref={mailRef} url="/mail.png" transparent opacity={0.5} scale={globalwidth*0.035} position={[globalwidth*-0.231, -1.3, 3]} onPointerOver={homeImageOver.bind(this, mailRef)} onPointerOut={homeImageOut.bind(this, mailRef)}
                 onClick={()=>{
                     const nb = Math.floor(Math.random() * 4) + 1
@@ -399,11 +476,16 @@ export default function Experience()
                 }}
                 >
                 </Image>
+                </>
+            : null}
 
 
             <Physics debug={ false } gravity={ [ 0, - 9.08, 0 ] }>
 
-                <Scroll width={"100vw"}>
+                <Scroll width={"100vw"} >
+
+                {enterAnimFinished ?
+                <>
 
                 {topPosition < 1 ?
                 <TBowling onArrowClicked={handleArrowClicked} oldScale={globalwidth*0.02} backPosition={117.692}></TBowling>
@@ -479,28 +561,76 @@ export default function Experience()
                 <Float speed={5} rotationIntensity={0}>
                     <primitive ref={deuxunRef} object={deuxunModel.scene} scale={globalwidth/87}position={[globalwidth*3.83,0,3]}
                     ></primitive>
-                    <Image url="/but.png" transparent position={[globalwidth * 3.83, -0.3 - globalheight*0.019, 3.1]} scale={globalwidth/10}></Image>
+                    <Image url="/but.png" transparent position={[globalwidth * 3.83, globalwidth*-0.032, 3.1]} scale={globalwidth/10}></Image>
                 </Float>
                 <Float speed={5} rotationIntensity={0}>
                     <primitive ref={deuxtroisRef} object={deuxtroisModel.scene} scale={globalwidth/87}position={[globalwidth*4,0,3]}
                     ></primitive>
-                    <Image url="/sncf.png" transparent position={[globalwidth * 4, -0.3 - globalheight*0.019, 3.1]} scale={globalwidth/10}></Image>
+                    <Image url="/sncf.png" transparent position={[globalwidth * 4, globalwidth*-0.032, 3.1]} scale={globalwidth/10}></Image>
                 </Float>
                 <Float speed={5} rotationIntensity={0}>
                     <primitive ref={deuxcinqRef} object={deuxcinqModel.scene} scale={globalwidth/87}position={[globalwidth*4.17,0,3]}
                     ></primitive>
-                    <Image url="/ecni.png" transparent position={[globalwidth * 4.17, -0.3 - globalheight*0.019, 3.1]} scale={globalwidth/10}></Image>
+                    <Image url="/ecni.png" transparent position={[globalwidth * 4.17, globalwidth*-0.032, 3.1]} scale={globalwidth/10}></Image>
 
                 </Float>
+                </>
+                :null}
 
 
 
 
 
                 <Float speed={12} rotationIntensity={0} floatIntensity={0.1}>
-                    <primitive ref={planeRef} object={planeModel.scene} scale={globalwidth/65} position={[-9,-1,0]} rotation={[0,0,0]}
+                    <primitive ref={planeRef} object={planeModel.scene} scale={globalwidth/65} position={[0,-1,86]} rotation={[0,Math.PI/2,0]}
                     ></primitive>
                 </Float>
+
+
+                { !startAnimFinished ? <>
+                <Cloud cloudRef={cloud7ref} position={[1,-2,80]} tdmodel={cloudModel2} />
+                <Cloud cloudRef={cloud8ref} position={[globalwidth*0.23,-0.5,70]} tdmodel={cloudModel2} />
+                <Cloud cloudRef={cloud9ref} position={[globalwidth*0.2,2,68]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud10ref} position={[globalwidth*0.2,1,65]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud11ref} position={[globalwidth*0.1,1,63]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud11ref} position={[globalwidth*-0.3,1,35]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud11ref} position={[globalwidth*-0.3,1,55]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud11ref} position={[globalwidth*-0.3,1,45]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud11ref} position={[globalwidth*0.3,1,30]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud11ref} position={[globalwidth*0.3,1,50]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud11ref} position={[globalwidth*0.3,1,40]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud12ref} position={[globalwidth*-0.2,0,61]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud13ref} position={[globalwidth*-0.1,-1,59]} tdmodel={cloudModel2} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.3,2,51]} tdmodel={cloudModel2} />
+                <Cloud cloudRef={cloud14ref} position={[globalwidth*-0.2,1,57]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud15ref} position={[globalwidth*0.2,-1,55]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud15ref} position={[globalwidth*0.3,1,55]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud16ref} position={[globalwidth*-0.3,0,53]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*0.1,2,51]} tdmodel={cloudModel2} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*0.2,0,48]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*0.1,1,46]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.2,0,44]} tdmodel={cloudModel2} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.1,-1,42]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.2,1,40]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*0.2,-1,38]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.3,0,36]} tdmodel={cloudModel2} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*0.1,2,34]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*0.2,0,32]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*0.1,1,30]} tdmodel={cloudModel2} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.2,0,28]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.1,-1,26]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.2,1,24]} tdmodel={cloudModel2} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*0.3,-1,22]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.3,0,20]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*0.2,2,18]} tdmodel={cloudModel2} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*0.2,0,16]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*0.3,1,14]} tdmodel={cloudModel3} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.2,0,12]} tdmodel={cloudModel2} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.3,-1,10]} tdmodel={cloudModel} />
+                <Cloud cloudRef={cloud17ref} position={[globalwidth*-0.2,1,8]} tdmodel={cloudModel3} />
+                </> : null}
+
+
 
                 </Scroll>
 
