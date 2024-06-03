@@ -29,7 +29,7 @@ export default function Island(props) {
         const nb = Math.floor(Math.random() * 4) + 1
         audioLoader.load('sounds/pop'+nb+".mp3", function(buffer){
             const sound = new THREE.PositionalAudio(listener)
-            sound.setVolume(1.5)
+            sound.setVolume(0.5)
             sound.setBuffer(buffer)
             sound.setRefDistance(1)
             sound.setRolloffFactor(1)
@@ -48,7 +48,7 @@ export default function Island(props) {
         
         audioLoader.load('sounds/star.mp3', function(buffer){
             const sound = new THREE.PositionalAudio(listener)
-            sound.setVolume(10.5)
+            sound.setVolume(2.5)
             sound.setBuffer(buffer)
             sound.setRefDistance(1)
             sound.setRolloffFactor(1)

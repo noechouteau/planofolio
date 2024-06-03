@@ -73,6 +73,7 @@ export default function Experience()
     const linkedinRef = useRef()
     const themeImRef = useRef()
     const welcomeTextRef = useRef()
+    const musiqueTextRef = useRef()
     const cvRef = useRef()
 
     const planeRef = useRef()
@@ -103,7 +104,7 @@ export default function Experience()
 
         audioLoader.load('sounds/wind.mp3', function(buffer){
             const sound = new THREE.PositionalAudio(listener)
-            sound.setVolume(2.5)
+            sound.setVolume(1.5)
             sound.setBuffer(buffer)
             sound.setRefDistance(1)
             sound.setRolloffFactor(1)
@@ -151,6 +152,11 @@ export default function Experience()
             let div= root.children[0].children[0].children[1]
             div.style.pointerEvents = 'all'
             gsap.to(welcomeTextRef.current,{
+                fillOpacity: 1,
+                duration: 1,
+                ease: "ease.out"
+            })
+            gsap.to(musiqueTextRef.current,{
                 fillOpacity: 1,
                 duration: 1,
                 ease: "ease.out"
@@ -424,8 +430,11 @@ export default function Experience()
                     <primitive ref={textRef2} object={txtPorto.scene}></primitive>
                 </Center>
 
-                <Text ref={welcomeTextRef} textAlign={"justify"} lineHeight={1.2} fontSize={globalwidth*0.012} maxWidth={globalwidth*0.29} fillOpacity={0} position={[globalwidth * -0.285, -0.75, 0]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"white"}>
+                <Text ref={welcomeTextRef} textAlign={"justify"} lineHeight={1.2} fontSize={globalwidth*0.012} maxWidth={globalwidth*0.29} fillOpacity={0} position={[globalwidth * -0.285, -0.45, 0]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"white"}>
                     Bienvenue sur mon site ! Je m'appelle Noé Chouteau, et j'adore créer toutes sortes d'expériences interactives en 3D. Intégrant le master "Expert en Création Numérique Interactive" de l'école des GOBELINS en Octobre 2024, je suis actuellement en recherche d'une alternance dans le domaine du web. Et si on s'envolait ensemble ?
+                </Text>
+                <Text ref={musiqueTextRef} textAlign={"justify"} lineHeight={1.2} fontSize={globalwidth*0.012} maxWidth={globalwidth*0.29} fillOpacity={0} position={[globalwidth * -0.285, -1.45, 0]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"white"}>
+                    Musique: Exhale - Lena Raine
                 </Text>
 
                 
