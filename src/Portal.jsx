@@ -63,7 +63,7 @@ export default function Portal(props) {
 
     {/* <Cloud cloudRef={cloudArrowRef} position={[globalwidth*1.3,7.,-1]} tdmodel={cloudArrow}  /> */}
 
-    <Text fontSize={globalwidth*0.08} maxWidth={globalwidth*0.47} opacity={1} position={[globalwidth*1.95, 12.6, -1]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"#3A9DFF"}>
+    <Text fontSize={globalwidth*0.08}  opacity={1} position={[globalwidth*1.95, 12.6, -1]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"#3A9DFF"}>
         PURTAL
     </Text>
     <mesh position={[globalwidth * 2.24, 11.42, -1]} rotation={[0, 0, 0]} >

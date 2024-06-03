@@ -72,6 +72,8 @@ export default function Experience()
     const mailRef = useRef()
     const linkedinRef = useRef()
     const themeImRef = useRef()
+    const welcomeTextRef = useRef()
+    const cvRef = useRef()
 
     const planeRef = useRef()
     const light1 = useRef()
@@ -99,6 +101,17 @@ export default function Experience()
         let root = document.querySelector("#root")
         const actualTime = new Date()
 
+        audioLoader.load('sounds/wind.mp3', function(buffer){
+            const sound = new THREE.PositionalAudio(listener)
+            sound.setVolume(2.5)
+            sound.setBuffer(buffer)
+            sound.setRefDistance(1)
+            sound.setRolloffFactor(1)
+            planeRef.current.add(sound)
+            sound.play()
+            sound.setLoop(true)
+        })
+
         if(actualTime.getHours() >= 8 && actualTime.getHours() < 12){
             setTheme('matinée')
             root.classList.remove(root.classList[0])
@@ -122,17 +135,26 @@ export default function Experience()
         }
         else {
             setTheme('nuit')
+            root.classList.remove(root.classList[0])
+            root.classList.add('nuit')
         }
         
+        document.body.style.cursor = 'auto'
 
         gsap.to(planeRef.current.position,{
             x: 0,
             duration: 2.5,
             ease: 'ease.out'
         }
+        
         ).then(()=>{
             let div= root.children[0].children[0].children[1]
             div.style.pointerEvents = 'all'
+            gsap.to(welcomeTextRef.current,{
+                fillOpacity: 1,
+                duration: 1,
+                ease: "ease.out"
+            })
             setStartAnimFinished(true)
         })
         gsap.to(planeRef.current.rotation,{
@@ -183,7 +205,7 @@ export default function Experience()
 
     useFrame((state, delta) =>
     {
-        console.log(topPosition)
+        console.log(theme)
         if (backFromArrow){
             gsap.to(currentRef.position, {duration: 2,x:globalwidth*oldPosition, y: -0.3, ease: 'expo.out'})
             gsap.to(currentRef.rotation, {duration: 2,x:0, y: 0, ease: 'expo.out'})
@@ -273,11 +295,11 @@ export default function Experience()
         :null}
 
         {theme === 'nuit' ?
-                <>
-                <Stars radius={90} depth={1} count={5000} factor={4} saturation={0} fade speed={1} />
-                <directionalLight position={[ 5, 4.5, -2]} intensity={ 5. } ref={light1} color="rgb(155,155,155)" />
-                <directionalLight position={[ 0, 0, 5 ]} intensity={ 8. } ref={light2} color="rgb(84,106,255)" /> 
-                </>
+            <>
+            <Stars radius={90} depth={1} count={5000} factor={4} saturation={0} fade speed={1} />
+            <directionalLight position={[ 5, 4.5, -2]} intensity={ 5. } ref={light1} color="rgb(155,155,155)" />
+            <directionalLight position={[ 0, 0, 5 ]} intensity={ 8. } ref={light2} color="rgb(84,106,255)" /> 
+            </>
                 
         :null}
 
@@ -290,7 +312,7 @@ export default function Experience()
                     const nb = Math.floor(Math.random() * 4) + 1
                     audioLoader.load('sounds/pop'+nb+".mp3", function(buffer){
                         const sound = new THREE.PositionalAudio(listener)
-                        sound.setVolume(1.5)
+                        sound.setVolume(0.5)
                         sound.setBuffer(buffer)
                         sound.setRefDistance(1)
                         sound.setRolloffFactor(1)
@@ -306,7 +328,7 @@ export default function Experience()
                     const nb = Math.floor(Math.random() * 4) + 1
                     audioLoader.load('sounds/pop'+nb+".mp3", function(buffer){
                         const sound = new THREE.PositionalAudio(listener)
-                        sound.setVolume(1.5)
+                        sound.setVolume(0.5)
                         sound.setBuffer(buffer)
                         sound.setRefDistance(1)
                         sound.setRolloffFactor(1)
@@ -322,7 +344,7 @@ export default function Experience()
                     const nb = Math.floor(Math.random() * 4) + 1
                     audioLoader.load('sounds/pop'+nb+".mp3", function(buffer){
                         const sound = new THREE.PositionalAudio(listener)
-                        sound.setVolume(1.5)
+                        sound.setVolume(0.5)
                         sound.setBuffer(buffer)
                         sound.setRefDistance(1)
                         sound.setRolloffFactor(1)
@@ -355,6 +377,23 @@ export default function Experience()
                         setTheme('matinée')
                     }
                 }}></Image>
+                <Image ref={cvRef} url="/cv.png" transparent opacity={0.5} scale={globalwidth*0.035} position={[globalwidth*-0.102, -1.3, 3]} onPointerOver={homeImageOver.bind(this, cvRef)} onPointerOut={homeImageOut.bind(this, cvRef)}
+                onClick={()=>{
+                    const nb = Math.floor(Math.random() * 4) + 1
+                    audioLoader.load('sounds/pop'+nb+".mp3", function(buffer){
+                        const sound = new THREE.PositionalAudio(listener)
+                        sound.setVolume(1)
+                        sound.setBuffer(buffer)
+                        sound.setRefDistance(0.5)
+                        sound.setRolloffFactor(1)
+                        mailRef.current.add(sound)
+                        sound.play()
+                    })
+                    window.open('https://drive.google.com/uc?export=download&id=1o3wy6DxzYA4RF7vRngVwGPPMOslnjxrv')
+                }}
+                >
+                </Image>
+
 
             <Physics debug={ false } gravity={ [ 0, - 9.08, 0 ] }>
 
@@ -384,6 +423,10 @@ export default function Experience()
                 <Center position={[globalwidth/-3.36,0.8,0]} scale={globalwidth/22}>
                     <primitive ref={textRef2} object={txtPorto.scene}></primitive>
                 </Center>
+
+                <Text ref={welcomeTextRef} textAlign={"justify"} lineHeight={1.2} fontSize={globalwidth*0.012} maxWidth={globalwidth*0.29} fillOpacity={0} position={[globalwidth * -0.285, -0.75, 0]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"white"}>
+                    Bienvenue sur mon site ! Je m'appelle Noé Chouteau, et j'adore créer toutes sortes d'expériences interactives en 3D. Intégrant le master "Expert en Création Numérique Interactive" de l'école des GOBELINS en Octobre 2024, je suis actuellement en recherche d'une alternance dans le domaine du web. Et si on s'envolait ensemble ?
+                </Text>
 
                 
 
@@ -422,11 +465,25 @@ export default function Experience()
                 text="Train Journey" scene={cloudTrainModel.scene} position={[globalwidth*3.04,-0.5,-1]}
                 link="https://train-journey.vercel.app" refer={cloudTrainref} infoOffset={0.76}/>
 
-                <Cloud cloudRef={balise2Ref} position={[globalwidth*3.43,-2,-1]} tdmodel={balise2Model} />
+                <Cloud cloudRef={balise2Ref} position={[globalwidth*3.53,-2,-1]} tdmodel={balise2Model} />
 
-                <Cloud cloudRef={deuxunRef} position={[globalwidth*3.73,0.5,3]} tdmodel={deuxunModel} />
-                <Cloud cloudRef={deuxtroisRef} position={[globalwidth*3.93,0.5,3]} tdmodel={deuxtroisModel} />
-                <Cloud cloudRef={deuxcinqRef} position={[globalwidth*4.13,0.5,3]} tdmodel={deuxcinqModel} />
+                <Float speed={5} rotationIntensity={0}>
+                    <primitive ref={deuxunRef} object={deuxunModel.scene} scale={globalwidth/87}position={[globalwidth*3.83,0,3]}
+                    ></primitive>
+                    <Image url="/but.png" transparent position={[globalwidth * 3.83, -0.3 - globalheight*0.019, 3.1]} scale={globalwidth/10}></Image>
+                </Float>
+                <Float speed={5} rotationIntensity={0}>
+                    <primitive ref={deuxtroisRef} object={deuxtroisModel.scene} scale={globalwidth/87}position={[globalwidth*4,0,3]}
+                    ></primitive>
+                    <Image url="/sncf.png" transparent position={[globalwidth * 4, -0.3 - globalheight*0.019, 3.1]} scale={globalwidth/10}></Image>
+                </Float>
+                <Float speed={5} rotationIntensity={0}>
+                    <primitive ref={deuxcinqRef} object={deuxcinqModel.scene} scale={globalwidth/87}position={[globalwidth*4.17,0,3]}
+                    ></primitive>
+                    <Image url="/ecni.png" transparent position={[globalwidth * 4.17, -0.3 - globalheight*0.019, 3.1]} scale={globalwidth/10}></Image>
+
+                </Float>
+
 
 
 

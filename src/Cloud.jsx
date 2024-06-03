@@ -18,7 +18,9 @@ export default function Cloud(props) {
         audioLoader.load('sounds/cloudBop.mp3', function(buffer){
             const sound = new THREE.PositionalAudio(listener)
             sound.setBuffer(buffer)
-            sound.setRefDistance(1)
+            sound.setVolume(0.5)
+
+            sound.setRefDistance(0.5)
             sound.setRolloffFactor(1)
             cloud.current.add(sound)
             sound.play()
@@ -36,16 +38,18 @@ export default function Cloud(props) {
             z: globalwidth/87,
             duration: 0.7,
             ease: 'elastic.in'
-        }).delay(1.5).then(() => {
+        }).delay(1.5)
+        setTimeout(()=>{
             audioLoader.load('sounds/cloudBopReverse.mp3', function(buffer){
                 const sound = new THREE.PositionalAudio(listener)
                 sound.setBuffer(buffer)
-                sound.setRefDistance(1)
-                sound.setRolloffFactor(1)
+                sound.setVolume(0.5)
+                sound.setRefDistance(0.5)
+                sound.setRolloffFactor(0.5)
                 cloud.current.add(sound)
                 sound.play()
             })
-        })
+        },1900)
     }
 
     return (

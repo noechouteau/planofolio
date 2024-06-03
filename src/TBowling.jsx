@@ -58,7 +58,7 @@ export default function TBowling(props) {
         <Outlines thickness={0.5} angle={0} color={"#3A9DFF"}/>
     </mesh>
 
-    <Text fontSize={globalwidth*0.08} maxWidth={globalwidth*0.47} opacity={1} position={[globalwidth*1.3, 12.6, -1]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"#3A9DFF"}>
+    <Text fontSize={globalwidth*0.08}  opacity={1} position={[globalwidth*1.3, 12.6, -1]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"#3A9DFF"}>
         TBOWLING
     </Text>
     <mesh position={[globalwidth * 1.56, 11.42, -1]} rotation={[0, 0, 0]} >

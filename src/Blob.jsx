@@ -59,7 +59,7 @@ export default function Blob(props) {
         <Outlines thickness={0.5} angle={0} color={"#3A9DFF"}/>
     </mesh>
 
-    <Text fontSize={globalwidth*0.08} maxWidth={globalwidth*0.47} opacity={1} position={[globalwidth*2.58, 12.6, -1]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"#3A9DFF"}>
+    <Text fontSize={globalwidth*0.08}  opacity={1} position={[globalwidth*2.58, 12.6, -1]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"#3A9DFF"}>
         BLOB
     </Text>
     <mesh position={[globalwidth * 2.85, 11.42, -1]} rotation={[0, 0, 0]} >

@@ -62,8 +62,8 @@ export default function Train(props) {
         <Outlines thickness={0.5} angle={0} color={"#3A9DFF"}/>
     </mesh>
 
-    <Text fontSize={globalwidth*0.08} maxWidth={globalwidth*0.47} opacity={1} position={[globalwidth*3.06, 12.6, -1]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"#3A9DFF"}>
-        TRAIN
+    <Text fontSize={globalwidth*0.08} opacity={1} position={[globalwidth*3.06, 12.6, -1]} rotation={[0, 0, 0]} font={"/fonts/MPLUSRounded1c-Black.ttf"} color={"#3A9DFF"}>
+        TRAIN JOURNEY
     </Text>
 
     <RoundedBox position={[globalwidth * 3.32, 11.2, -1]} radius={0.1} args={[globalwidth*0.49, 1.4,0.1]} bevelSegments={0} >
