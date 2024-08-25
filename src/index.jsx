@@ -2,9 +2,10 @@ import './style.css'
 import ReactDOM from 'react-dom/client'
 import { Canvas } from '@react-three/fiber'
 import Experience from './Experience.jsx'
-import { Loader, ScrollControls } from '@react-three/drei'
+import { Loader, ScrollControls, Html } from '@react-three/drei'
 import { Suspense, useEffect, useState } from 'react'
 import LoadingScreen from './LoadingScreen.jsx'
+import Iut from './Iut.jsx'
 
 const root = ReactDOM.createRoot(document.querySelector('#root'))
 

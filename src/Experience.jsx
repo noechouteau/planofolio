@@ -1,4 +1,4 @@
-import { Stars,useGLTF, OrbitControls, useScroll, Scroll, Text, Float, Center, Text3D, useHelper, Html, useCursor, Image } from '@react-three/drei'
+import { Stars,useGLTF, OrbitControls, useScroll, Scroll, Text, Float, Center, Image } from '@react-three/drei'
 import { Perf } from 'r3f-perf'
 import { InstancedRigidBodies, CylinderCollider, BallCollider, CuboidCollider, RigidBody, Physics } from '@react-three/rapier'
 import { useMemo, useEffect, useState, useRef } from 'react'
@@ -19,11 +19,11 @@ import Cloud from './Cloud'
 import Portal from './Portal'
 import Blob from './Blob'
 import Train from './Train'
+import Iut from './Iut'
 
 export default function Experience(started)
 {
     const globalwidth  = useThree((state) => state.viewport.width)
-    const globalheight = useThree((state) => state.viewport.height)
     const camera = useThree((state) => state.camera)
 
     const listener = new THREE.AudioListener()
@@ -73,6 +73,7 @@ export default function Experience(started)
     const welcomeTextRef = useRef()
     const musiqueTextRef = useRef()
     const cvRef = useRef()
+    const folioRef = useRef()
 
     const planeRef = useRef()
     const light1 = useRef()
@@ -235,7 +236,6 @@ export default function Experience(started)
                 ease: "ease.out"
             })
             setStartAnimFinished(true)
-            setComeBack(true)
         })
         gsap.to(planeRef.current.rotation,{
             x: -Math.PI*2,
@@ -253,6 +253,8 @@ export default function Experience(started)
     let [topPosition, setTopPosition] = useState(0)
     let [topScale, setTopScale] = useState(0)
     let [oldScale, setOldScale] = useState(0)
+    let [iutPosition, setIutPosition] = useState(0)
+    let [iutVisible, setIutVisible] = useState(false)
     let [backPosition, setBackPosition] = useState(0)
 
     const handleInfoClicked = (offset, ref, topPos, topScale) => {
@@ -334,8 +336,14 @@ export default function Experience(started)
         }
     })
 
+    let closedIut = () => {
+        setIutVisible(false)
+    }
+
 
     return <>
+
+        <Iut position={[iutPosition,0,0]} isVisible={iutVisible} onClose={closedIut}/>
 
         {/* <Perf position="top-left" /> */}
 
@@ -476,6 +484,23 @@ export default function Experience(started)
                 }}
                 >
                 </Image>
+                <Image ref={folioRef} url="/folio.png" transparent opacity={0.5} scale={globalwidth*0.035} position={[globalwidth*-0.059, -1.3, 3]} onPointerOver={homeImageOver.bind(this, folioRef)} onPointerOut={homeImageOut.bind(this, folioRef)}
+                onClick={()=>{
+                    const nb = Math.floor(Math.random() * 4) + 1
+                    audioLoader.load('sounds/pop'+nb+".mp3", function(buffer){
+                        const sound = new THREE.PositionalAudio(listener)
+                        sound.setVolume(1)
+                        sound.setBuffer(buffer)
+                        sound.setRefDistance(0.5)
+                        sound.setRolloffFactor(1)
+                        folioRef.current.add(sound)
+                        sound.play()
+                    })
+                    setIutPosition(scroll.offset*globalwidth*4)
+                    setIutVisible(true)
+                }}
+                >
+                </Image>
                 </>
             : null}
 
@@ -483,6 +508,7 @@ export default function Experience(started)
             <Physics debug={ false } gravity={ [ 0, - 9.08, 0 ] }>
 
                 <Scroll width={"100vw"} >
+
 
                 {enterAnimFinished ?
                 <>

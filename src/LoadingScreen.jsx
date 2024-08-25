@@ -37,12 +37,12 @@ export default function LoadingScreen({ start, onStarted}) {
             <div className="loadingScreen__progress">
                 <div
                     className="loadingScreen__progress__value"
-                    style={{ width: `${total*2}%` }}
+                    style={{ width: `${total*2-2}%` }}
                 ></div>
             </div>
 
             <div className="loadingScreen__board">
-                <h1 className="loadingScreen__title">{`${total*2}%`}</h1>
+                <h1 className="loadingScreen__title">{`${total*2-2}%`}</h1>
                 <p>Attention ! Cette expérience comporte des éléments sonores. <br></br>Mettez des écouteurs pour en profiter pleinement  :)</p>
             </div>
             <p className="loadingScreen__start" ref={starttextRef}>Cliquez n'importe où pour commencer.</p>
