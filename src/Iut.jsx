@@ -164,7 +164,10 @@ export default function Iut(props){
 
     return(
         <Html style={{display:"none"}} transform={false} position={props.position} fullscreen ref={windowRef} >
-            <div style={{
+            <div 
+            onClick={(e)=>e.stopPropagation()}
+            onPointerEnter={(e)=>e.stopPropagation()}
+            style={{
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
@@ -202,6 +205,8 @@ export default function Iut(props){
                                 </div>
                                 }
                                 {semestre == 4 && <p style={{textAlign:"center"}}>Réalisation et mise en production de l'application BROS3.</p>}
+                                {semestre == 5 && <p style={{textAlign:"center"}}>Mise en place de MAESTRO, application plus large.</p>}
+                                {semestre == 6 && <p style={{textAlign:"center"}}>Mise en place de nouvelles pages et création de fonctionnalités.</p>}
                             </div>
 
                             <div style={{width:"25vw"}}>
@@ -218,6 +223,9 @@ export default function Iut(props){
                                 </div>
                                 }
                                 {semestre == 4 && <p style={{textAlign:"center"}}>Mise au point d'un fonctionnement en lazy loading.</p>}
+                                {semestre == 5 && <p style={{textAlign:"center"}}>Confrontation à de nouvelles problématiques et nouvelle recherche pour BROS3.</p>}
+                                {semestre == 6 && <p style={{textAlign:"center"}}>Mise en place de tests et montée de version.</p>}
+
                             </div>
 
                             {semestre < 5 && 
@@ -253,9 +261,26 @@ export default function Iut(props){
                                 </div>
                                                                 }
                                 {semestre == 4 && <p style={{textAlign:"center"}}>Collaboration avec un collègue chargé du backend.</p>}
+                                {semestre == 5 && <p style={{textAlign:"center"}}>Prises de décisions sur les priorités et sur l'organisation.</p>}
+                                {semestre == 6 && <p style={{textAlign:"center"}}>Collaboration avec l'ops et le développeur backend pour assurer un environnement fonctionnel.</p>}
                             </div>
                             }
                         </div>
+
+                        {semestre == 5 &&
+                        <p style={{width:"70%", textAlign:"center",color:"white"}}>Ce premier semestre d'alternance a été une expérience enrichissante où j'ai consolidé mes compétences techniques. 
+                            La collaboration au sein de l'équipe m'a permis de prendre des initiatives et d'apporter ma vision au projet MAESTRO. L'adaptabilité et la résolution 
+                            proactive des problèmes ont été des compétences cruciales, tout comme la capacité à prendre des décisions autonomes. Cette expérience a renforcé ma 
+                            compréhension réaliste du monde de l'entreprise et m'a poussé à relever des défis techniques avec une approche réfléchie.</p>
+                        }
+
+                        {semestre == 6 &&
+                        <p style={{width:"70%", textAlign:"center",color:"white"}}>L’alternance a profondément influencé ma vie professionnelle en me permettant d’appliquer les 
+                        connaissances théoriques acquises à l’école et de développer des compétences techniques spécifiques à l’informatique. Cette expérience m’a aussi aidé à 
+                        comprendre les attentes du monde du travail et à renforcer des compétences essentielles telles que la gestion du temps, la communication et la résolution de problèmes. 
+                        Ayant bénéficié de cette opportunité enrichissante, j’ai pris des initiatives et contribué activement à des projets comme MAESTRO, ce qui m’a donné la confiance 
+                        nécessaire pour envisager de poursuivre un Master en alternance à l’école des Gobelins à Paris dans le domaine de la création numérique interactive.</p>
+                        }
 
                         
                         {semestre < 5 &&

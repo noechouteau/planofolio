@@ -496,6 +496,7 @@ export default function Experience(started)
                         folioRef.current.add(sound)
                         sound.play()
                     })
+
                     setIutPosition(scroll.offset*globalwidth*4)
                     setIutVisible(true)
                 }}
