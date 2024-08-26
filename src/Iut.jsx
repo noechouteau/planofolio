@@ -114,6 +114,7 @@ export default function Iut(props){
                 break
             case 4 :
                 setFiles(sujetS3,renduS3,sujetS3,renduS3,sujetS3,renduS3,sujetS3,renduS3,sujetS3,renduS3,sujetS3,renduS3)
+                setInfoAdditionnelle("")
                 break
             case 5 :
                 setTextes("Partir des exigences et aller jusqu'à une application complète.","Sélectionner les algorithmes adéquats pour répondre à un problème donné.","Déployer des services dans une architecture réseau.","Optimiser une base de données, interagir avec une application et mettre en œuvre la sécurité."," Appliquer une démarche de suivi de projet en fonction des besoins métiers des clients et des utilisateurs.","Situer son rôle et ses missions au sein d'une équipe informatique.")
